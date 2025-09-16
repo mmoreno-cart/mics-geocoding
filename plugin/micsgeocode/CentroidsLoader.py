@@ -193,10 +193,7 @@ class CentroidsLoader():
 
                 print(f"[CentroidsLoader] Computing centroid for cluster {cluster_polygon[self.cluster_no_field]}")
 
-                if cluster_polygon.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0].isNull():
-                    cluster_centroid_ft.setGeometry(cluster_polygon.geometry().centroid())
-                else:
-                    cluster_centroid_ft.setGeometry(cluster_polygon.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0])
+                cluster_centroid_ft.setGeometry(Utils.getPoleOfInaccessibilityOrCentroid(cluster_polygon, self.pole_inaccessibility_precision))
 
                 self.layers[Utils.LayersType.CENTROIDS].dataProvider().addFeatures([cluster_centroid_ft])
                 # cluster_centroid_fts.append(cluster_centroid_ft)
@@ -389,9 +386,13 @@ class CentroidsLoader():
         """ Compute the centroid geometry for a given centroid feature, the multi point and the convexhull
         """
 
-        # determine if pole of inaccessibility can be determined
-        if cluster_convexhull_ft.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0].isNull():
-            cluster_centroid_ft.setGeometry(cluster_multipt_ft.geometry().centroid())
-        else:
-            cluster_centroid_ft.setGeometry(cluster_convexhull_ft.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0])
+        # # determine if pole of inaccessibility can be determined
+        # if cluster_convexhull_ft.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0].isNull():
+        #     cluster_centroid_ft.setGeometry(cluster_multipt_ft.geometry().centroid())
+        # else:
+        #     cluster_centroid_ft.setGeometry(cluster_convexhull_ft.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0])
 
+        cluster_centroid_ft.setGeometry(Utils.getPoleOfInaccessibilityOrCentroid(
+            polygon_feature = cluster_convexhull_ft,
+            fallback_feature = cluster_multipt_ft,
+            precision = self.pole_inaccessibility_precision))
