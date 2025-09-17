@@ -144,24 +144,41 @@ class CovariatesProcesser():
                     input_field_nodata_id = line.index(self.input_csv_field_nodata) if self.input_csv_field_nodata else None
                 if rowIndex != 0:
                     line = [s.strip() for s in re.split(delimiter, i.strip())]
-                    inputs.append({
-                        'file': line[input_file_id],
-                        'file_format': line[input_fileformat_id],
-                        'sum_stat': line[input_field_sumstat_id],
-                        'column': line[input_field_columnname_id],
-                        'user_nodata_value': line[input_field_nodata_id] if input_field_nodata_id else None
-                    })
+
+                    covariate_delimiter = ';' if delimiter == ',' else ','
+                    # multiple covariates can be defined in a single row, separated by ; or ,
+                    # each covariate must have a corresponding output column name
+                    covariates = {
+                        'sum_stats': line[input_field_sumstat_id].split(covariate_delimiter),
+                        'columns': line[input_field_columnname_id].split(covariate_delimiter),
+                    }
+
+                    if len(covariates['sum_stats']) != len(covariates['columns']):
+                        raise ValueError(f"In row {rowIndex+1} of the input CSV file, the number of summary statistics ({len(covariates['sum_stats'])}) does not match the number of output columns ({len(covariates['columns'])}). Please correct the input file.")
+                    
+                    for idx, sum_stat in enumerate(covariates['sum_stats']):
+
+                        inputs.append({
+                            'row_index': rowIndex,
+                            'file': line[input_file_id],
+                            'file_format': line[input_fileformat_id],
+                            'sum_stat': sum_stat,
+                            'column': covariates['columns'][idx],
+                            'user_nodata_value': line[input_field_nodata_id] if input_field_nodata_id else None
+                        })
                 rowIndex = rowIndex + 1
-            rowIndex = 1
+            
+            #rowIndex = 1
 
             # loop through all covariates
-            for input_row in inputs:
-                file_name = input_row['file']
+            for input in inputs:
+                row_index = input['row_index']
+                file_name = input['file']
                 file_path = os.path.join(self.images_directory, file_name)
-                file_format = input_row['file_format']
-                sum_stat = input_row['sum_stat']
-                column_name = input_row['column']
-                user_nodata_value = None if not input_row['user_nodata_value'] or input_row['user_nodata_value'] == "" else input_row['user_nodata_value']
+                file_format = input['file_format']
+                sum_stat = input['sum_stat']
+                column_name = input['column']
+                user_nodata_value = None if not input['user_nodata_value'] or input['user_nodata_value'] == "" else input['user_nodata_value']
 
                 if sum_stat == 'variety':
                     msg_error = "Variety statistic is temporarily not supported in this version, it will not be available in the output file."
@@ -169,8 +186,8 @@ class CovariatesProcesser():
                     self.output_warning = msg_error
                     continue
                 else:
-                    Logger.logInfo(f"[CovariatesProcesser] Processing input file no {rowIndex}: file name: {file_name}, file format: {file_format}, summary statistics: {sum_stat}, output column: {column_name}, user nodata value: {user_nodata_value}")
-                rowIndex = rowIndex + 1
+                    Logger.logInfo(f"[CovariatesProcesser] Processing input file row {row_index}: file name: {file_name}, file format: {file_format}, summary statistics: {sum_stat}, output column: {column_name}, user nodata value: {user_nodata_value}")
+                #rowIndex = rowIndex + 1
 
                 # Compute distance to nearest
                 if file_format == 'Shapefile':
