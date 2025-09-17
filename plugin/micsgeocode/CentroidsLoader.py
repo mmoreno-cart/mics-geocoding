@@ -44,6 +44,7 @@ class CentroidsLoader():
         self.cluster_no_field = "default"
         self.cluster_type_field = "default"
         self.admin_boundaries_field = "default"
+        self.pole_inaccessibility_precision = 0.00001  # default precision for pole of inaccessibility
 
     def loadCentroids(self) -> Errors.ErrorCode:
         """ Facade method that handle all the centroids loading
@@ -192,29 +193,8 @@ class CentroidsLoader():
 
                 print(f"[CentroidsLoader] Computing centroid for cluster {cluster_polygon[self.cluster_no_field]}")
 
-                pole_inaccessibility_precision = 0.00001  # default precision for pole of inaccessibility
+                cluster_centroid_ft.setGeometry(Utils.getPoleOfInaccessibilityOrCentroid(cluster_polygon, self.pole_inaccessibility_precision))
 
-                # test100 = cluster_polygon.geometry().poleOfInaccessibility(100)
-                # test1 = cluster_polygon.geometry().poleOfInaccessibility(1)
-                # test01 = cluster_polygon.geometry().poleOfInaccessibility(0.1)
-                # test001 = cluster_polygon.geometry().poleOfInaccessibility(0.01)
-                # test0001 = cluster_polygon.geometry().poleOfInaccessibility(0.001)
-                # test00001 = cluster_polygon.geometry().poleOfInaccessibility(0.0001)
-                # test000001 = cluster_polygon.geometry().poleOfInaccessibility(0.00001)
-                # print(f"[CentroidsLoader] Pole of inaccessibility | 100: {test100[0]}")
-                # print(f"[CentroidsLoader] Pole of inaccessibility | 1: {test1[0]}")
-                # print(f"[CentroidsLoader] Pole of inaccessibility | 0.1: {test01[0]}")
-                # print(f"[CentroidsLoader] Pole of inaccessibility | 0.01: {test001[0]}")
-                # print(f"[CentroidsLoader] Pole of inaccessibility | 0.001: {test0001[0]}")
-                # print(f"[CentroidsLoader] Pole of inaccessibility | 0.0001: {test00001[0]}")
-                # print(f"[CentroidsLoader] Pole of inaccessibility | 0.00001: {test000001[0]}")
-
-                if cluster_polygon.geometry().poleOfInaccessibility(pole_inaccessibility_precision)[0].isNull():
-                    cluster_centroid_ft.setGeometry(cluster_polygon.geometry().centroid())
-                else:
-                    cluster_centroid_ft.setGeometry(cluster_polygon.geometry().poleOfInaccessibility(pole_inaccessibility_precision)[0])
-
-                # cluster_centroid_ft.setGeometry(cluster_polygon.geometry().poleOfInaccessibility(100)[0])
                 self.layers[Utils.LayersType.CENTROIDS].dataProvider().addFeatures([cluster_centroid_ft])
                 # cluster_centroid_fts.append(cluster_centroid_ft)
             QgsProject.instance().addMapLayer(self.layers[Utils.LayersType.POLYGONS])
@@ -406,14 +386,13 @@ class CentroidsLoader():
         """ Compute the centroid geometry for a given centroid feature, the multi point and the convexhull
         """
 
-        # test100 = cluster_convexhull_ft.geometry().poleOfInaccessibility(100)
-        # test50 = cluster_convexhull_ft.geometry().poleOfInaccessibility(50)
-        # test10 = cluster_convexhull_ft.geometry().poleOfInaccessibility(10)
+        # # determine if pole of inaccessibility can be determined
+        # if cluster_convexhull_ft.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0].isNull():
+        #     cluster_centroid_ft.setGeometry(cluster_multipt_ft.geometry().centroid())
+        # else:
+        #     cluster_centroid_ft.setGeometry(cluster_convexhull_ft.geometry().poleOfInaccessibility(self.pole_inaccessibility_precision)[0])
 
-        # print(f"[CentroidsLoader] Pole of inaccessibility | 100: {test100[0]}, 50: {test50[0]}, 10: {test10[0]}")
-
-        # determine if pole of inaccessibility can be determined
-        if cluster_convexhull_ft.geometry().poleOfInaccessibility(100)[0].isNull():
-            cluster_centroid_ft.setGeometry(cluster_multipt_ft.geometry().centroid())
-        else:
-            cluster_centroid_ft.setGeometry(cluster_convexhull_ft.geometry().poleOfInaccessibility(100)[0])
+        cluster_centroid_ft.setGeometry(Utils.getPoleOfInaccessibilityOrCentroid(
+            polygon_feature = cluster_convexhull_ft,
+            fallback_feature = cluster_multipt_ft,
+            precision = self.pole_inaccessibility_precision))
