@@ -119,13 +119,8 @@ class CovariatesProcesser():
         Logger.logInfo(f"[CovariatesProcesser] Detected delimiter: '{delimiter}'")
         with open(self.input_csv, "r", encoding='utf-8-sig') as f:
 
-
-            rowIndex = 0
-            inputs = []
-
-            registry = QgsProject.instance()
-
-            clusters = [
+            qgis_project = QgsProject.instance()
+            ref_features = [
                 {
                     'fid': ft.id(),
                     ref_layer_id_field: ft[ref_layer_id_field]
@@ -133,10 +128,12 @@ class CovariatesProcesser():
             ]  # TODO: ft.id() is different than ft.GetFID()? !!!!! make sure IDs match - fix required!!!
 
             # Convert the dictionary into DataFrame
-            summary_df = pd.DataFrame(clusters)
+            summary_df = pd.DataFrame(ref_features)
             summary_df = summary_df.astype({ref_layer_id_field: "string"}) # force string type for the ID field
 
             # read all input covariates
+            rowIndex = 0
+            inputs = []
             for i in f:
                 if rowIndex == 0:
                     line = [s.strip() for s in re.split(delimiter, i.strip())]
@@ -261,7 +258,7 @@ class CovariatesProcesser():
                         # Update extent of the layer
                         shortest_dist_lyr.updateExtents()
                         # Add the layer to the Layers panel
-                        registry.addMapLayer(shortest_dist_lyr)
+                        qgis_project.addMapLayer(shortest_dist_lyr)
 
                         search_fts = [{ref_layer_id_field: ft[ref_layer_id_field], column_name: ft['dist']} for ft in
                                       shortest_dist_lyr.getFeatures()]
