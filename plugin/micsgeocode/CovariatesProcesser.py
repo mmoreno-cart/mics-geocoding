@@ -115,7 +115,11 @@ class CovariatesProcesser():
         shortest_distance_basename = ""
 
         # read input list of covariates
+        delimiter = Utils.detect_csv_delimiter(self.input_csv)
+        Logger.logInfo(f"[CovariatesProcesser] Detected delimiter: '{delimiter}'")
         with open(self.input_csv, "r", encoding='utf-8-sig') as f:
+
+
             rowIndex = 0
             inputs = []
 
@@ -135,14 +139,14 @@ class CovariatesProcesser():
             # read all input covariates
             for i in f:
                 if rowIndex == 0:
-                    line = [s.strip() for s in re.split(',', i.strip())]
+                    line = [s.strip() for s in re.split(delimiter, i.strip())]
                     input_file_id = line.index(self.input_csv_field_filename)
                     input_fileformat_id = line.index(self.input_csv_field_fileformat)
                     input_field_sumstat_id = line.index(self.input_csv_field_sumstat)
                     input_field_columnname_id = line.index(self.input_csv_field_columnname)
                     input_field_nodata_id = line.index(self.input_csv_field_nodata) if self.input_csv_field_nodata else None
                 if rowIndex != 0:
-                    line = [s.strip() for s in re.split(',', i.strip())]
+                    line = [s.strip() for s in re.split(delimiter, i.strip())]
                     inputs.append({
                         'file': line[input_file_id],
                         'file_format': line[input_fileformat_id],
@@ -191,9 +195,7 @@ class CovariatesProcesser():
                         for cluster_ft in self.__ref_layer.getFeatures():
                             feat = QgsFeature()
 
-                            # startGeom = cluster_ft.geometry().centroid() # TODO: does this make sense with polygon features?
                             startGeom = Utils.getPoleOfInaccessibilityOrCentroid(cluster_ft)
-
                             endGeom = QgsGeometry.fromPointXY(QgsPointXY(0, 0))
 
                             #if not crs_transformation:

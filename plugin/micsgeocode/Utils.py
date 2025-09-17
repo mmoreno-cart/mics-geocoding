@@ -14,6 +14,8 @@ from qgis.core import *  # QGIS3
 from PyQt5 import QtCore
 
 from pathlib import Path
+import csv  
+#from io import StringIO  
 
 import typing
 from enum import Enum
@@ -185,7 +187,21 @@ def getval(ft: QgsFeature, field: QgsField) -> str:
         result = ""
     return result
 
-
+def detect_csv_delimiter(file_path, sample_lines=3):  
+# def detect_csv_delimiter(f, sample_lines=3):  
+    """Auto-detect CSV delimiter by analyzing first few lines"""  
+    with open(file_path, 'r', encoding='utf-8-sig') as f:  
+        sample = ''.join([f.readline() for _ in range(sample_lines)])  
+    
+    #sample = ''.join([f.readline() for _ in range(sample_lines)])  
+      
+    sniffer = csv.Sniffer()  
+    try:  
+        dialect = sniffer.sniff(sample, delimiters=',;\\t|')  
+        return dialect.delimiter  
+    except csv.Error:  
+        return ','  # fallback to comma
+    
 def getFieldsListAsStrArray(file: str) -> typing.List[str]:
     """ analyze file and retrieve field list
     """
@@ -197,8 +213,9 @@ def getFieldsListAsStrArray(file: str) -> typing.List[str]:
             fieldList = [f.name() for f in layer.fields()]
     elif extension == "csv":
         #with open(file, "r", encoding='utf-8-sig') as f:
+        delimiter = detect_csv_delimiter(file)
         with open(file, "r") as f:
-            fieldList = [s.strip() for s in f.readline().strip().split(',')]
+            fieldList = [s.strip() for s in f.readline().strip().split(delimiter)]
     elif extension == "txt":
         with open(file, "r") as f:
             line = f.readline()
