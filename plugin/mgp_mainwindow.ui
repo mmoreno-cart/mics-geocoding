@@ -167,7 +167,7 @@
              <x>10</x>
              <y>10</y>
              <width>461</width>
-             <height>351</height>
+             <height>321</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -194,7 +194,7 @@
               <x>0</x>
               <y>20</y>
               <width>461</width>
-              <height>331</height>
+              <height>301</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -295,54 +295,6 @@
               </layout>
              </item>
              <item>
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayoutUrbanism">
-               <item>
-                <widget class="QCheckBox" name="urbanismCheckBox">
-                 <property name="text">
-                  <string>Use Degree of Urbanism restriction</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="urbanismFileLineEdit">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QToolButton" name="urbanismFileToolButton">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>...</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QToolButton" name="urbanismInfoToolButton">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
               <spacer name="verticalSpacer_7">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -399,7 +351,7 @@
              <x>10</x>
              <y>10</y>
              <width>461</width>
-             <height>251</height>
+             <height>281</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -423,7 +375,7 @@
               <x>0</x>
               <y>20</y>
               <width>461</width>
-              <height>221</height>
+              <height>261</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -582,6 +534,41 @@
               </layout>
              </item>
              <item>
+              <layout class="QHBoxLayout" name="horizontalLayoutUrbanism">
+               <item>
+                <widget class="QCheckBox" name="urbanismCheckBox">
+                 <property name="text">
+                  <string>Use Degree of Urbanism restriction</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="urbanismFileLineEdit">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QToolButton" name="urbanismFileToolButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QToolButton" name="urbanismInfoToolButton">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
               <spacer name="verticalSpacer_6">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -614,7 +601,7 @@
            <property name="geometry">
             <rect>
              <x>404</x>
-             <y>270</y>
+             <y>290</y>
              <width>81</width>
              <height>25</height>
             </rect>
@@ -660,9 +647,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>20</y>
+              <y>30</y>
               <width>461</width>
-              <height>61</height>
+              <height>41</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
