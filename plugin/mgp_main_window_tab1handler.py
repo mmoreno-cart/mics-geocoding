@@ -17,7 +17,6 @@
 import os
 
 from PyQt5 import QtWidgets, QtCore #, QtGui
-from PyQt5.QtGui import QIcon
 from pathlib import Path
 #from datetime import datetime
 
@@ -45,12 +44,7 @@ class MGPMainWindowTab1Handler(QtCore.QObject):
         self.mainwindow = mainwindow
         self.ui = self.mainwindow.ui
 
-        ## ####################################################################
-        # Init Icons
-        ## ####################################################################
 
-        icon_info = self.ui.urbanismInfoToolButton.style().standardIcon(self.ui.urbanismInfoToolButton.style().SP_MessageBoxInformation)
-        self.ui.urbanismInfoToolButton.setIcon(icon_info)
 
         ## ####################################################################
         # Init signal slots connection
