@@ -355,6 +355,17 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
             displacer.setReferenceLayer(self.ui.referenceLayerLineEdit.text())
             displacer.ref_id_field = self.ui.referenceLayerFieldCombobox.currentText()
 
+            # Set urbanism restriction if enabled  
+            if self.ui.urbanismCheckBox.isChecked():
+                if self.ui.urbanismFileLineEdit.text():  
+                    displacer.setUrbanismRestriction(self.ui.urbanismFileLineEdit.text())
+                else:
+                    Logger.logWarning("[Displace] Urbanism restriction is enabled but no valid raster file has been provided. Ignoring urbanism restriction.")
+                    self.ui.urbanismCheckBox.setChecked(False)  
+                    self.ui.urbanismFileLineEdit.clear()  
+                    self.ui.urbanismFileLineEdit.setEnabled(False)  
+                    self.ui.urbanismFileToolButton.setEnabled(False)
+                    
             displacer.displaceCentroids()
 
             Utils.putLayerOnTopIfExists(Utils.LayersType.CENTROIDS)
