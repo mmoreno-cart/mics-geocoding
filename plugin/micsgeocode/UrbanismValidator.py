@@ -111,10 +111,10 @@ class UrbanismValidator:
         # print("[UrbanismValidator] Displacement validated successfully")
         return True, ""
 
-    def getValidationRemark(self, original_point: QgsGeometry, displaced_point: QgsGeometry) -> str:
-        """Get validation remark for output layer"""
-        if not self.enabled:
-            return ""
+    # def getValidationRemark(self, original_point: QgsGeometry, displaced_point: QgsGeometry) -> str:
+    #     """Get validation remark for output layer"""
+    #     if not self.enabled:
+    #         return ""
     
-        is_valid, error_msg = self.validateDisplacement(original_point, displaced_point)
-        return error_msg if not is_valid else ""
+    #     is_valid, error_msg = self.validateDisplacement(original_point, displaced_point)
+    #     return error_msg if not is_valid else ""

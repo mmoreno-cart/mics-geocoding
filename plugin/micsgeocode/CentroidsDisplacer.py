@@ -177,6 +177,35 @@ class CentroidsDisplacer():
 # DisplaceCentroids
 ####################################################################
 
+    def __generateRemark(self, cluster_centroid_ft: QgsFeature, ref_id_before: str, ref_id_after: str, urbanism_remark: str) -> str:  
+        """ Generate validation remark for a displaced centroid """
+
+        remark = Errors.ErrorDisplayString[Errors.ErrorCode.SUCCESS]
+
+        if not cluster_centroid_ft[self.cluster_no_field]:
+            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_NUMBER_MISSING]
+        if not cluster_centroid_ft[self.cluster_type_field]:
+            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_AREA_MISSING]
+        if not cluster_centroid_ft[self.cluster_admin_field]:
+            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_ADMIN_MISSING]
+        if ref_id_before == "None" or ref_id_after == "None":
+            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_CLUSTER_OUTSIDE_BOUNDARY]
+
+        if ref_id_before != ref_id_after:
+            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_CLUSTER_DISPLACED_OUTSIDE_GEODOMAIN]
+
+        if cluster_centroid_ft[self.cluster_admin_field] != ref_id_before:
+            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_CLUSTER_ADMIN_CONFLICT_ADMIN_GEOMETRY]
+
+        # Add urbanism constraint checking using validator
+        # urbanism_remark = self.urbanismValidator.getValidationRemark(
+        #     cluster_centroid_ft.geometry(), displaced_point_wgs
+        # )
+        if urbanism_remark and urbanism_remark != "":
+            remark += (" | " if remark != '' else "") + urbanism_remark
+
+        return remark
+
     def __displaceCentroid(self, cluster_centroid_ft: QgsFeature, crs_transformation: Transforms) -> typing.NoReturn:
         """ Displace a centroid identify by a qgsfeature object
         """
@@ -212,7 +241,9 @@ class CentroidsDisplacer():
         keep_loop = True
         iterations = 0
         while keep_loop:
-            print(f"Cluster {cluster_centroid_ft[self.cluster_no_field]}: Iteration {iterations}") # - Max displacement distance: {max_displace_distance} m")
+            iterations += 1
+
+            # print(f"Cluster {cluster_centroid_ft[self.cluster_no_field]}: Iteration {iterations}") # - Max displacement distance: {max_displace_distance} m")
             # call displacement function
             new_x, new_y, distance, angle_degree = self.__displacepoint(x, y, max_displace_distance)
 
@@ -243,18 +274,17 @@ class CentroidsDisplacer():
                 ref_id_after = 'Many'
 
             # Check urbanism restriction using validator
-            urbanism_valid, _ = self.urbanismValidator.validateDisplacement(
+            urbanism_valid, urbanism_error = self.urbanismValidator.validateDisplacement(
                 cluster_centroid_ft.geometry(), displaced_geom_wgs
             )
-
-            print(f"Admin constraint valid: {ref_id_after == ref_id_before} | Urbanism constraint valid: {urbanism_valid}")
 
             if ref_id_after == ref_id_before and urbanism_valid:
                 keep_loop = False
 
-            iterations += 1
-            if iterations > CentroidsDisplacer.MAX_ITERATIONS:
+            if iterations >= CentroidsDisplacer.MAX_ITERATIONS:
                 keep_loop = False
+
+        remark = self.__generateRemark(cluster_centroid_ft, ref_id_before, ref_id_after, urbanism_error)  
 
         self.__updateOutputsMemoryLayer(
             cluster_centroid_ft,
@@ -265,7 +295,8 @@ class CentroidsDisplacer():
             max_displace_distance,
             ref_id_after,
             iterations,
-            crs_transformation)
+            crs_transformation,
+            remark)
 
 ####################################################################
 # DisplacePoint
@@ -370,7 +401,8 @@ class CentroidsDisplacer():
                                    max_displace_distance: float,
                                    ref_id_after: str,
                                    iterations,
-                                   crs_transformation: Transforms) -> typing.NoReturn:
+                                   crs_transformation: Transforms,
+                                   remark: str) -> typing.NoReturn:
         """ updates all the outputs layer
         """
 
@@ -378,31 +410,6 @@ class CentroidsDisplacer():
         feat_disp_centroid = QgsFeature()
         feat_disp_centroid.setGeometry(displaced_point_wgs)
 
-        # TODO: for performance move remarks generation to a separate function, probably inside __displacepoint where all checks are done (at least urbanism check)
-        remark = Errors.ErrorDisplayString[Errors.ErrorCode.SUCCESS]
-
-        # FIXME: errors on remark generation
-        if not cluster_centroid_ft[self.cluster_no_field]:
-            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_NUMBER_MISSING]
-        if not cluster_centroid_ft[self.cluster_type_field]:
-            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_AREA_MISSING]
-        if not cluster_centroid_ft[self.cluster_admin_field]:
-            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_ADMIN_MISSING]
-        if ref_id_before == "None" or ref_id_after == "None":
-            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_CLUSTER_OUTSIDE_BOUNDARY]
-
-        if ref_id_before != ref_id_after:
-            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_CLUSTER_DISPLACED_OUTSIDE_GEODOMAIN]
-
-        if cluster_centroid_ft[self.cluster_admin_field] != ref_id_before:
-            remark += (" | " if remark != '' else "") + Errors.ErrorDisplayString[Errors.ErrorCode.ERROR_DISPLACER_CLUSTER_ADMIN_CONFLICT_ADMIN_GEOMETRY]
-
-        # Add urbanism constraint checking using validator
-        urbanism_remark = self.urbanismValidator.getValidationRemark(
-            cluster_centroid_ft.geometry(), displaced_point_wgs
-        )
-        if urbanism_remark:
-            remark += (" | " if remark != '' else "") + urbanism_remark
 
         # DISPLACED layer
         feat_disp_centroid.setAttributes([
