@@ -160,11 +160,12 @@ def writeLayerIfExists(layerType: LayersType) -> typing.NoReturn:
         options.driverName = "ESRI Shapefile"
 
         # writer = QgsVectorFileWriter( "output_path_and_name.shp", provider.encoding(), provider.fields(), QGis.WKBPolygon, provider.crs() )
-        writer = QgsVectorFileWriter.writeAsVectorFormatV2(
+        writer = QgsVectorFileWriter.writeAsVectorFormatV3(
             layer,
             LayersName.fileName(layerType),
             QgsCoordinateTransformContext(),
             options)
+
         # Don't know how to manage this.
         # reloadLayerFromDiskToAvoidMemoryFlag(layerType)
 
