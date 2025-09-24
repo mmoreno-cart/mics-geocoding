@@ -165,6 +165,11 @@ def writeLayerIfExists(layerType: LayersType) -> typing.NoReturn:
             LayersName.fileName(layerType),
             QgsCoordinateTransformContext(),
             options)
+        
+        # if writer[0] == QgsVectorFileWriter.NoError:
+        #     print("success!")
+        # else:
+        #     print(writer)
 
         # Don't know how to manage this.
         # reloadLayerFromDiskToAvoidMemoryFlag(layerType)
