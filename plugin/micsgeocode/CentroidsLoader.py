@@ -14,7 +14,7 @@ import typing
 from datetime import datetime
 
 from qgis.core import *  # QGIS3
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import QMetaType
 
 from . import Utils
 from pathlib import Path
@@ -117,35 +117,35 @@ class CentroidsLoader():
         """
         if type == Utils.LayersType.GPS:
             self.layers[Utils.LayersType.GPS] = Utils.createLayer('Point?crs='+CRS.WGS84, Utils.LayersType.GPS, [
-                QgsField("cluster", QVariant.Int),
-                QgsField("type", QVariant.String),
-                QgsField("lon", QVariant.Double),
-                QgsField("lat", QVariant.Double)
+                QgsField("cluster", QMetaType.Type.Int),
+                QgsField("type", QMetaType.Type.QString),
+                QgsField("lon", QMetaType.Type.Double),
+                QgsField("lat", QMetaType.Type.Double)
             ])
 
         elif type == Utils.LayersType.MULTIPLT:
             self.layers[Utils.LayersType.MULTIPLT] = Utils.createLayer('MultiPoint?crs='+CRS.WGS84, Utils.LayersType.MULTIPLT, [
-                QgsField("cluster", QVariant.Int),
-                QgsField("type", QVariant.String),
-                QgsField("count", QVariant.Int)
+                QgsField("cluster", QMetaType.Type.Int),
+                QgsField("type", QMetaType.Type.QString),
+                QgsField("count", QMetaType.Type.Int)
             ])
 
         elif type == Utils.LayersType.CONVEXHULL:
             self.layers[Utils.LayersType.CONVEXHULL] = Utils.createLayer('Polygon?crs='+CRS.WGS84, Utils.LayersType.CONVEXHULL, [
-                QgsField("cluster", QVariant.Int),
-                QgsField("type", QVariant.String),
-                QgsField("count", QVariant.Int),
-                QgsField("area_m2", QVariant.Double),
-                QgsField("angle_deg", QVariant.Double),
-                QgsField("width_m", QVariant.Double),
-                QgsField("height_m", QVariant.Double)
+                QgsField("cluster", QMetaType.Type.Int),
+                QgsField("type", QMetaType.Type.QString),
+                QgsField("count", QMetaType.Type.Int),
+                QgsField("area_m2", QMetaType.Type.Double),
+                QgsField("angle_deg", QMetaType.Type.Double),
+                QgsField("width_m", QMetaType.Type.Double),
+                QgsField("height_m", QMetaType.Type.Double)
             ])
         elif type == Utils.LayersType.CENTROIDS:
             self.layers[Utils.LayersType.CENTROIDS] = Utils.createLayer('Point?crs='+CRS.WGS84, Utils.LayersType.CENTROIDS, [
-                QgsField("cluster", QVariant.Int),
-                QgsField("type", QVariant.String),
-                QgsField("count", QVariant.Int),
-                QgsField("admin", QVariant.String)
+                QgsField("cluster", QMetaType.Type.Int),
+                QgsField("type", QMetaType.Type.QString),
+                QgsField("count", QMetaType.Type.Int),
+                QgsField("admin", QMetaType.Type.QString)
             ])
 
 ## ###########################################################################

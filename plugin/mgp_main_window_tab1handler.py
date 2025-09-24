@@ -222,8 +222,6 @@ class MGPMainWindowTab1Handler(QtCore.QObject):
                 Logger.logWarning("[Generate] A valid admin boundaries field must be provided")
                 return
 
-            Logger.logWarning("[Generate] A problem occured while loading centroids")
-
         try:
             loader = Loader.CentroidsLoader()
 

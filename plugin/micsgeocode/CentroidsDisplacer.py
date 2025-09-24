@@ -38,7 +38,7 @@ import typing
 from datetime import datetime
 
 from qgis.core import *  # QGIS3
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import QMetaType
 
 from . import CentroidBuffersMaxDistanceComputer as Radier
 from . import CentroidsLoader as CentroidsLoader
@@ -335,54 +335,54 @@ class CentroidsDisplacer():
         """
         # create layer for anonymised buffers
         self.__generatedLayers[Utils.LayersType.BUFFERSANON] = Utils.createLayer('Polygon?crs='+CRS.WGS84, Utils.LayersType.BUFFERSANON, [
-            QgsField("cluster", QVariant.Int), # cluster number from centroid layer
-            QgsField("type", QVariant.String), # area type from centroid layer
-            QgsField("buf_dist", QVariant.Int)
+            QgsField("cluster", QMetaType.Type.Int), # cluster number from centroid layer
+            QgsField("type", QMetaType.Type.QString), # area type from centroid layer
+            QgsField("buf_dist", QMetaType.Type.Int)
         ])
 
         # create layer for displacement links
         self.__generatedLayers[Utils.LayersType.LINKS] = Utils.createLayer('LineString?crs='+CRS.WGS84, Utils.LayersType.LINKS, [
-            QgsField("cluster", QVariant.Int), # cluster number from centroid layer
-            QgsField("type", QVariant.String), # area type from centroid layer  
-            QgsField("count", QVariant.Int),
-            QgsField("lon_orig", QVariant.Double, "double", 15, 6),
-            QgsField("lat_orig", QVariant.Double, "double", 15, 6),
-            QgsField("lon_disp", QVariant.Double, "double", 15, 6),
-            QgsField("lat_disp", QVariant.Double, "double", 15, 6),
-            QgsField("disp_dist", QVariant.Double, "double", 15, 2),
-            QgsField("disp_angle", QVariant.Int),
-            QgsField("ref_cl_src", QVariant.String), # admin from centroid layer
-            QgsField("ref_orig", QVariant.String),
-            QgsField("ref_disp", QVariant.String),
-            QgsField("iter", QVariant.Int)
+            QgsField("cluster", QMetaType.Type.Int), # cluster number from centroid layer
+            QgsField("type", QMetaType.Type.QString), # area type from centroid layer  
+            QgsField("count", QMetaType.Type.Int),
+            QgsField("lon_orig", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("lat_orig", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("lon_disp", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("lat_disp", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("disp_dist", QMetaType.Type.Double, "double", 15, 2),
+            QgsField("disp_angle", QMetaType.Type.Int),
+            QgsField("ref_cl_src", QMetaType.Type.QString), # admin from centroid layer
+            QgsField("ref_orig", QMetaType.Type.QString),
+            QgsField("ref_disp", QMetaType.Type.QString),
+            QgsField("iter", QMetaType.Type.Int)
         ])
 
         # create layer for displaced centroids
         self.__generatedLayers[Utils.LayersType.DISPLACED] = Utils.createLayer('Point?crs='+CRS.WGS84, Utils.LayersType.DISPLACED, [
-            QgsField("cluster", QVariant.Int), # cluster number from centroid layer
-            QgsField("type", QVariant.String), # area type from centroid layer
-            QgsField("count", QVariant.Int),
-            QgsField("lon_orig", QVariant.Double, "double", 15, 6),
-            QgsField("lat_orig", QVariant.Double, "double", 15, 6),
-            QgsField("lon_disp", QVariant.Double, "double", 15, 6),
-            QgsField("lat_disp", QVariant.Double, "double", 15, 6),
-            QgsField("disp_dist", QVariant.Double, "double", 15, 2),
-            QgsField("disp_angle", QVariant.Int),
-            QgsField("tr_epsg", QVariant.String),
-            QgsField("ref_cl_src", QVariant.String), # admin from centroid layer
-            QgsField("ref_orig", QVariant.String),
-            QgsField("ref_disp", QVariant.String),
-            QgsField("iter", QVariant.Int),
-            QgsField("Remarks", QVariant.String)
+            QgsField("cluster", QMetaType.Type.Int), # cluster number from centroid layer
+            QgsField("type", QMetaType.Type.QString), # area type from centroid layer
+            QgsField("count", QMetaType.Type.Int),
+            QgsField("lon_orig", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("lat_orig", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("lon_disp", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("lat_disp", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("disp_dist", QMetaType.Type.Double, "double", 15, 2),
+            QgsField("disp_angle", QMetaType.Type.Int),
+            QgsField("tr_epsg", QMetaType.Type.QString),
+            QgsField("ref_cl_src", QMetaType.Type.QString), # admin from centroid layer
+            QgsField("ref_orig", QMetaType.Type.QString),
+            QgsField("ref_disp", QMetaType.Type.QString),
+            QgsField("iter", QMetaType.Type.Int),
+            QgsField("Remarks", QMetaType.Type.QString)
         ])
 
         # create layer for anonymised displaced centroids
         self.__generatedLayers[Utils.LayersType.DISPLACEDANON] = Utils.createLayer('Point?crs='+CRS.WGS84, Utils.LayersType.DISPLACEDANON, [
-            QgsField("HH1", QVariant.Int), # cluster number from centroid layer
-            QgsField("HH6", QVariant.String), # area type from centroid layer
-            QgsField("Longitude", QVariant.Double, "double", 15, 6),
-            QgsField("Latitude", QVariant.Double, "double", 15, 6),  
-            QgsField("MICSGEO", QVariant.String) # admin from centroid layer
+            QgsField("HH1", QMetaType.Type.Int), # cluster number from centroid layer
+            QgsField("HH6", QMetaType.Type.QString), # area type from centroid layer
+            QgsField("Longitude", QMetaType.Type.Double, "double", 15, 6),
+            QgsField("Latitude", QMetaType.Type.Double, "double", 15, 6),  
+            QgsField("MICSGEO", QMetaType.Type.QString) # admin from centroid layer
         ])
 
         # add layers to project following correct z order

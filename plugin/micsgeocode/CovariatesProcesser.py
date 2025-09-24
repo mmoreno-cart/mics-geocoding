@@ -31,9 +31,6 @@ from .Transforms import Transforms
 from . import Utils
 
 # to avoid GEOS errors! see: https://stackoverflow.com/questions/62075847/using-qgis-and-shaply-error-geosgeom-createlinearring-r-returned-a-null-pointer
-# This might be useless - I tried without it an it worked fine
-#from shapely import speedups
-#speedups.disable()
 
 """
 Zonal Statistics
@@ -198,9 +195,9 @@ class CovariatesProcesser():
                         shortest_dist_lyr = QgsVectorLayer('LineString?crs=epsg:4326', f'Shortest distance to {shortest_distance_basename}', 'memory')
                         shortest_dist_prov = shortest_dist_lyr.dataProvider()
                         shortest_dist_prov.addAttributes([
-                            QgsField(ref_layer_id_field, QtCore.QVariant.String),
-                            QgsField("nearestfid", QtCore.QVariant.String),
-                            QgsField("dist", QtCore.QVariant.Double, 'double', 15, 2)
+                            QgsField(ref_layer_id_field, QtCore.QMetaType.Type.QString),
+                            QgsField("nearestfid", QtCore.QMetaType.Type.QString),
+                            QgsField("dist", QtCore.QMetaType.Type.Double, 'double', 15, 2)
                         ])
                         shortest_dist_lyr.updateFields()
 
