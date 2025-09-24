@@ -31,9 +31,6 @@ from .Transforms import Transforms
 from . import Utils
 
 # to avoid GEOS errors! see: https://stackoverflow.com/questions/62075847/using-qgis-and-shaply-error-geosgeom-createlinearring-r-returned-a-null-pointer
-# This might be useless - I tried without it an it worked fine
-#from shapely import speedups
-#speedups.disable()
 
 """
 Zonal Statistics
