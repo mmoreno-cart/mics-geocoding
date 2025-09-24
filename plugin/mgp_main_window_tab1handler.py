@@ -16,7 +16,7 @@
 
 import os
 
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore #, QtGui
 from pathlib import Path
 #from datetime import datetime
 
@@ -43,6 +43,8 @@ class MGPMainWindowTab1Handler(QtCore.QObject):
         super().__init__()
         self.mainwindow = mainwindow
         self.ui = self.mainwindow.ui
+
+
 
         ## ####################################################################
         # Init signal slots connection

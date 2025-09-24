@@ -17,7 +17,7 @@
 import os
 import csv
 
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore#, QtGui
 from pathlib import Path
 from datetime import datetime
 
@@ -47,6 +47,15 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         # Values are stored after the centroids displacement
         # --> Used for generating buffer around original buffer
         self.maxDistancesPerBufferId = None
+
+        ## ####################################################################
+        # Init Icons
+        ## ####################################################################
+
+        style_app = self.ui.urbanismInfoToolButton.style()
+        icon_info = style_app.standardIcon(style_app.SP_MessageBoxInformation)
+
+        self.ui.urbanismInfoToolButton.setIcon(icon_info)
 
         ## #############################################################
         # Animation init
@@ -87,6 +96,11 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         self.ui.centroidsLayerTypeFieldComboBox.currentTextChanged.connect(self.onCentroidsLayerTypeFieldChanged)
         self.ui.centroidsLayerAdminFieldComboBox.currentTextChanged.connect(self.onCentroidsLayerAdminFieldChanged)
 
+        self.ui.urbanismCheckBox.toggled.connect(self.onUrbanismCheckBoxToggled)
+        self.ui.urbanismFileToolButton.clicked.connect(self.onUrbanismFileToolButtonClicked)
+        self.ui.urbanismFileLineEdit.textChanged.connect(self.onUrbanismFileLineEditChanged)
+        self.ui.urbanismInfoToolButton.clicked.connect(self.showUrbanismInfoMessage)
+
         self.ui.displaceCentroidsButton.clicked.connect(self.onDisplaceCentroidsButtonClicked)
 
         self.ui.exportDisplacedCentroidsButton.clicked.connect(self.onExportDisplacedCentroidsButtonClicked)
@@ -108,6 +122,9 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         self.ui.centroidsLayerTypeFieldComboBox.setToolTip("Choose the field indicating cluster area variable.")
         self.ui.centroidsLayerAdminFieldComboBox.setToolTip("Choose the field indicating cluster admin variable.")
 
+        self.ui.urbanismFileToolButton.setToolTip("Browse for Degree of Urbanism raster file on the computer. Click on the info button for more information.")
+        self.ui.urbanismFileLineEdit.setToolTip("Degree of Urbanism raster file on the computer.")
+
         self.ui.displaceCentroidsButton.setToolTip(
             "Displace Centroids. QGIS generates additional layers depending on inputs.\nThe final anonymised displaced cluster file is generated “BASENAME_cluster_anonymised_displaced_centroids”."
         )
@@ -122,6 +139,10 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
 
         self.ui.centroidsLayerLineEdit.clear()
         self.ui.referenceLayerLineEdit.clear()
+        self.ui.urbanismCheckBox.setChecked(False)  
+        self.ui.urbanismFileLineEdit.clear()  
+        self.ui.urbanismFileLineEdit.setEnabled(False)  
+        self.ui.urbanismFileToolButton.setEnabled(False)
 
         self.maxDistancesPerBufferId = None
 
@@ -264,6 +285,37 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         '''
         self.mainwindow.updateSaveStatus(True)
 
+    # #############################################################
+    # Degree of Urbanism Layer
+    # #############################################################
+
+    def onUrbanismCheckBoxToggled(self, checked) -> typing.NoReturn:
+        '''Handle urbanism checkbox toggle'''
+        self.ui.urbanismFileLineEdit.setEnabled(checked)
+        self.ui.urbanismFileToolButton.setEnabled(checked)
+        self.mainwindow.updateSaveStatus(True)
+
+    def onUrbanismFileToolButtonClicked(self) -> typing.NoReturn:
+        '''Handle browse for urbanism raster file'''
+        settings = QtCore.QSettings('MICS Geocode', 'qgis plugin')
+        dir = settings.value("last_file_directory", QtCore.QDir.homePath())
+        file, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Open Degree of Urbanism raster file", dir, "(*.tif *.tiff)")
+        if file:
+            self.ui.urbanismFileLineEdit.setText(os.path.normpath(file))
+            settings.setValue("last_file_directory", os.path.dirname(file))
+
+    def onUrbanismFileLineEditChanged(self) -> typing.NoReturn:  
+        '''Handle urbanism file path changed'''  
+        self.mainwindow.updateSaveStatus(True)
+            
+    def showUrbanismInfoMessage(self) -> typing.NoReturn:
+        msg = QtWidgets.QMessageBox(self.mainwindow)
+        msg.setWindowTitle("Degree of Urbanism")
+        msg.setTextFormat(QtCore.Qt.RichText)
+        msg.setText('Using Degree of Urbanism restriction will allow you to obtain displaced points inside areas of equivalent urbanism types.<br>'
+                    'Download the <a href="https://human-settlement.emergency.copernicus.eu/download.php?ds=smod">Global Human Settlement Layer</a> to load it in the plugin.')
+        msg.exec_()
+
     ## #############################################################
     # Main action
     ## #############################################################
@@ -303,6 +355,17 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
             displacer.setReferenceLayer(self.ui.referenceLayerLineEdit.text())
             displacer.ref_id_field = self.ui.referenceLayerFieldCombobox.currentText()
 
+            # Set urbanism restriction if enabled  
+            if self.ui.urbanismCheckBox.isChecked():
+                if self.ui.urbanismFileLineEdit.text():  
+                    displacer.setUrbanismRestriction(self.ui.urbanismFileLineEdit.text())
+                else:
+                    Logger.logWarning("[Displace] Urbanism restriction is enabled but no valid raster file has been provided. Ignoring urbanism restriction.")
+                    self.ui.urbanismCheckBox.setChecked(False)  
+                    self.ui.urbanismFileLineEdit.clear()  
+                    self.ui.urbanismFileLineEdit.setEnabled(False)  
+                    self.ui.urbanismFileToolButton.setEnabled(False)
+                    
             displacer.displaceCentroids()
 
             Utils.putLayerOnTopIfExists(Utils.LayersType.CENTROIDS)
