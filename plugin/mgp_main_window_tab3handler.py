@@ -79,6 +79,7 @@ class MGPMainWindowTab3Handler(QtCore.QObject):
         self.ui.covrefLayerIdFieldCombobox.setToolTip("Choose the field corresponding to the polygon layer's ID field.")
 
         self.ui.computeCovariatesButton.setToolTip("Compute covariates. QGIS generates additional layers depending on inputs and a CSV file with the outputs.")
+        self.ui.covoutputsOpenFileToolButton.setToolTip("Open covariates output file.")
 
         ## ####################################################################
         # Init icons

@@ -29,6 +29,7 @@ from .micsgeocode import CentroidsDisplacer as Displacer
 from .micsgeocode import CentroidBuffersMaxDistanceComputer as Radier
 from .micsgeocode.Logger import Logger
 from .micsgeocode import Utils
+from .mgp_file import openFile as MGP_OPEN_FILE
 from qgis.core import QgsVectorLayer, QgsProject  # QGIS3
 
 
@@ -43,6 +44,8 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         super().__init__()
         self.mainwindow = mainwindow
         self.ui = self.mainwindow.ui
+        self.displacedanon_file = None
+        self.ui.displacedCentroidsOpenFileToolButton.setEnabled(False)
 
         # Values are stored after the centroids displacement
         # --> Used for generating buffer around original buffer
@@ -54,8 +57,10 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
 
         style_app = self.ui.urbanismInfoToolButton.style()
         icon_info = style_app.standardIcon(style_app.SP_MessageBoxInformation)
+        icon_open_directory = style_app.standardIcon(style_app.SP_DirOpenIcon)
 
         self.ui.urbanismInfoToolButton.setIcon(icon_info)
+        self.ui.displacedCentroidsOpenFileToolButton.setIcon(icon_open_directory)
 
         ## #############################################################
         # Animation init
@@ -104,6 +109,7 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         self.ui.displaceCentroidsButton.clicked.connect(self.onDisplaceCentroidsButtonClicked)
 
         self.ui.exportDisplacedCentroidsButton.clicked.connect(self.onExportDisplacedCentroidsButtonClicked)
+        self.ui.displacedCentroidsOpenFileToolButton.clicked.connect(self.onDisplacedCentroidsOpenFileToolButtonClicked)
 
         # Command window
         self.ui.toggleShowMoreButton.clicked.connect(self.onToggleShowMoreButtonClicked)
@@ -130,6 +136,7 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         )
 
         self.ui.exportDisplacedCentroidsButton.setToolTip("Export anonymised displaced cluster centroids as a CSV file.")
+        self.ui.displacedCentroidsOpenFileToolButton.setToolTip("Open anonymised displaced cluster centroids file.")
 
     ## #############################################################
     # reset
@@ -143,7 +150,9 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         self.ui.urbanismFileLineEdit.clear()  
         self.ui.urbanismFileLineEdit.setEnabled(False)  
         self.ui.urbanismFileToolButton.setEnabled(False)
+        self.ui.displacedCentroidsOpenFileToolButton.setEnabled(False)
 
+        self.displacedanon_file = None
         self.maxDistancesPerBufferId = None
 
         # hide show more section
@@ -400,7 +409,17 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
                             ft['MICSGEO']
                         ])
                 
+                self.displacedanon_file = filename
+                if self.displacedanon_file:
+                    self.ui.displacedCentroidsOpenFileToolButton.setEnabled(True)
+                else:
+                    self.ui.displacedCentroidsOpenFileToolButton.setEnabled(False)
+
                 Logger.logSuccess("[Displace] Centroids succcessfully exported as CSV")
 
         except BaseException as e:
             Logger.logException("[Displace] A problem occured while saving displaced anonymised centroids", e)
+
+    def onDisplacedCentroidsOpenFileToolButtonClicked(self) -> typing.NoReturn:
+        if self.displacedanon_file:
+            MGP_OPEN_FILE(self.displacedanon_file)
