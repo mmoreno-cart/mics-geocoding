@@ -122,8 +122,8 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         self.ui.centroidsLayerTypeFieldComboBox.setToolTip("Choose the field indicating cluster area variable.")
         self.ui.centroidsLayerAdminFieldComboBox.setToolTip("Choose the field indicating cluster admin variable.")
 
-        self.ui.urbanismFileToolButton.setToolTip("Browse for Degree of Urbanism raster file on the computer. Click on the info button for more information.")
-        self.ui.urbanismFileLineEdit.setToolTip("Degree of Urbanism raster file on the computer.")
+        self.ui.urbanismFileToolButton.setToolTip("Browse for DEGURBA (Degree of Urbanisation) raster file on your computer. Click the info button for more details.")
+        self.ui.urbanismFileLineEdit.setToolTip("Degree of Urbanisation raster file on the computer.")
 
         self.ui.displaceCentroidsButton.setToolTip(
             "Displace Centroids. QGIS generates additional layers depending on inputs.\nThe final anonymised displaced cluster file is generated “BASENAME_cluster_anonymised_displaced_centroids”."
@@ -286,7 +286,7 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         self.mainwindow.updateSaveStatus(True)
 
     # #############################################################
-    # Degree of Urbanism Layer
+    # Degree of Urbanisation Layer
     # #############################################################
 
     def onUrbanismCheckBoxToggled(self, checked) -> typing.NoReturn:
@@ -299,7 +299,7 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         '''Handle browse for urbanism raster file'''
         settings = QtCore.QSettings('MICS Geocode', 'qgis plugin')
         dir = settings.value("last_file_directory", QtCore.QDir.homePath())
-        file, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Open Degree of Urbanism raster file", dir, "(*.tif *.tiff)")
+        file, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Open Degree of Urbanisation raster file", dir, "(*.tif *.tiff)")
         if file:
             self.ui.urbanismFileLineEdit.setText(os.path.normpath(file))
             settings.setValue("last_file_directory", os.path.dirname(file))
@@ -310,10 +310,10 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
             
     def showUrbanismInfoMessage(self) -> typing.NoReturn:
         msg = QtWidgets.QMessageBox(self.mainwindow)
-        msg.setWindowTitle("Degree of Urbanism")
+        msg.setWindowTitle("Degree of Urbanisation")
         msg.setTextFormat(QtCore.Qt.RichText)
-        msg.setText('Using Degree of Urbanism restriction will allow you to obtain displaced points inside areas of equivalent urbanism types.<br>'
-                    'Download the <a href="https://human-settlement.emergency.copernicus.eu/download.php?ds=smod">Global Human Settlement Layer</a> to load it in the plugin.')
+        msg.setText('Enabling this option ensures displaced cluster locations remain within the same Degree of Urbanisation class.<br>'
+                    'Download the <a href="https://human-settlement.emergency.copernicus.eu/download.php?ds=smod">GHS Settlement Model Grid</a> to load it into the plugin.')
         msg.exec_()
 
     ## #############################################################

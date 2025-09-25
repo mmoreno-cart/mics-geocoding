@@ -538,7 +538,7 @@
                <item>
                 <widget class="QCheckBox" name="urbanismCheckBox">
                  <property name="text">
-                  <string>Use Degree of Urbanism restriction</string>
+                  <string>Displace within same DEGURBA</string>
                  </property>
                 </widget>
                </item>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Miguel\dev\repos\qgis_plugins\MICS-Geocoding-Plugin\mics-geocoding\plugin\mgp_mainwindow.ui'
+# Form implementation generated from reading ui file 'D:\dev\repos\qgis_plugins\MICS-Geocoding-Plugin\mics-geocoding\plugin\mgp_mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -572,7 +572,7 @@ class Ui_MGPDialog(object):
         self.centroidsLayerTypeFieldLabel.setText(_translate("MGPDialog", "Area (HH6)"))
         self.referenceLayerLabel.setText(_translate("MGPDialog", "Boundary Layer"))
         self.referenceLayerToolButton.setText(_translate("MGPDialog", "..."))
-        self.urbanismCheckBox.setText(_translate("MGPDialog", "Use Degree of Urbanism restriction"))
+        self.urbanismCheckBox.setText(_translate("MGPDialog", "Displace within same DEGURBA"))
         self.urbanismFileToolButton.setText(_translate("MGPDialog", "..."))
         self.displaceCentroidsButton.setText(_translate("MGPDialog", "Displace Centroids"))
         self.toggleShowMoreButton.setText(_translate("MGPDialog", "Show More"))
