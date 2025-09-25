@@ -193,19 +193,22 @@ def getval(ft: QgsFeature, field: QgsField) -> str:
         result = ""
     return result
 
-def detect_csv_delimiter(file_path, sample_lines=3):  
-# def detect_csv_delimiter(f, sample_lines=3):  
-    """Auto-detect CSV delimiter by analyzing first few lines"""  
-    with open(file_path, 'r', encoding='utf-8-sig') as f:  
-        sample = ''.join([f.readline() for _ in range(sample_lines)])  
-    
-    #sample = ''.join([f.readline() for _ in range(sample_lines)])  
-      
-    sniffer = csv.Sniffer()  
-    try:  
-        dialect = sniffer.sniff(sample, delimiters=',;\\t|')  
-        return dialect.delimiter  
-    except csv.Error:  
+def detect_csv_delimiter(file_path, sample_lines=3):
+# def detect_csv_delimiter(f, sample_lines=3):
+    """Auto-detect CSV delimiter by analyzing first few lines"""
+
+    with open(file_path, 'r', encoding='utf-8-sig') as f:
+        sample = ''.join([f.readline() for _ in range(sample_lines)])
+    #sample = ''.join([f.readline() for _ in range(sample_lines)])
+
+    sniffer = csv.Sniffer()
+    try:
+        print(f"Sample for delimiter detection:\n{sample}")
+        dialect = sniffer.sniff(sample, delimiters=',;\t|')
+        print(f"Detected delimiter: '{dialect.delimiter}'")
+        return dialect.delimiter
+    except csv.Error:
+        print("Could not detect delimiter, defaulting to comma")
         return ','  # fallback to comma
     
 def getFieldsListAsStrArray(file: str) -> typing.List[str]:
@@ -217,15 +220,14 @@ def getFieldsListAsStrArray(file: str) -> typing.List[str]:
         layer = QgsVectorLayer(file, "tmp", "ogr")
         if layer:
             fieldList = [f.name() for f in layer.fields()]
-    elif extension == "csv":
-        #with open(file, "r", encoding='utf-8-sig') as f:
+    elif extension in ["csv", 'tsv', 'txt']:
         delimiter = detect_csv_delimiter(file)
         with open(file, "r") as f:
             fieldList = [s.strip() for s in f.readline().strip().split(delimiter)]
-    elif extension == "txt":
-        with open(file, "r") as f:
-            line = f.readline()
-            fieldList = line.strip().split('\t')
+    # elif extension == "txt":
+    #     with open(file, "r") as f:
+    #         line = f.readline()
+    #         fieldList = line.strip().split('\t')
 
     return fieldList
 
