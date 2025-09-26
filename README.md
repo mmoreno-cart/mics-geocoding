@@ -4,67 +4,76 @@ This document is aimed at describing the project and helping developer at onboar
 
 This document is **NOT** a comitment to anything. It is **NOT** an official technical specifications.
 
-Author: Jan Burdziej, Unicef
-Support in dev: Etienne Delclaux, CartONG
+Author: Jan Burdziej, Unicef; Support in dev: CartONG
 
 > In this project, MGP is used as an acornym for MICS Geocode Plugin
 
 - [release notes](release-notes.md)
 
+## MICS Geocoding QGIS Plugin
+
+This repository contains the MICS Geocoding Plugin for QGIS, developed for UNICEF. The plugin provides tools for spatial analysis and covariate extraction for MICS.
+
+### Features
+
+- Load and process cluster centroids from CSV files
+- Displace centroids based on urbanisation and other criteria
+- Compute zonal statistics and extract covariates
+- Export processed data for further analysis
+
+## Development environment
+
+TODO
+
 ## Project structure description
 
-There are three helpers script for windows:
-
-### WIN_copy.bat
-
-This script setup locally the qgis plugin. It copies everything at the right place in the qgis plugin directory
-`%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\micsgeocodeplugin`
-
-This is made for development phase and personal setup.
-
-> The first time the plugin is copied using WIN_copy.bat, it is loaded but not activated. This has to be don in QGIS:
-> `Plugin/Install or manage the extension` then `All` then search for `micsgeocode`
-> Finally, check the checkbox, and it's all set !
-
-### WIN_zip.bat
-
-This script setup a zip file based on `%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\micsgeocodeplugin`.
-The zip file is named `micsgeocodeplugin.zip`, and will be located in the same folder as the WIN_zip.bat.
-This is made to share the project with others.
-For more information on this, please refer to the [official documentation on this topic](https://docs.qgis.org/3.16/fr/docs/user_manual/plugins/plugins.html#the-install-from-zip-tab)
-
-> This script is based on the very common 7zip.
-> Make sure this lib is installed before running this script.
+```
+├── plugin/
+│   ├── __init__.py
+│   ├── icon_bars.png
+│   ├── icon_gis.png
+│   ├── logo_w-unicef.png
+│   ├── logo_wo-unicef.png
+│   ├── metadata.txt
+│   ├── mgp_config_reader.py
+│   ├── mgp_config_writer.py
+│   ├── mgp_file.py
+│   ├── mgp_main_window_tab1handler.py
+│   ├── mgp_main_window_tab2handler.py
+│   ├── mgp_main_window_tab3handler.py
+│   ├── mgp_main_window.py
+│   ├── mgp_mainwindow.ui
+│   ├── mgp_plugin.py
+│   ├── mgp_version.py
+│   ├── resources_rc.py
+│   ├── resources.qrc
+│   ├── ui_mgp_mainwindow.py
+│   ├── WIN_build.bat
+│   └── micsgeocode/
+│       ├── __init__.py
+│       ├── CentroidBuffersLayerWriter.py
+│       ├── CentroidBuffersMaxDistanceComputer.py
+│       ├── CentroidsDisplacer.py
+│       ├── CentroidsLoader.py
+│       ├── CovariatesProcesser.py
+│       ├── Errors.py
+│       ├── Logger.py
+│       ├── ProgressBar.py
+│       ├── ReferenceLayer.py
+│       ├── Transforms.py
+│       ├── UrbanismValidator.py
+│       ├── Utils.py
+│       └── test/
+├── releases/
+├── README.md
+├── release-notes.md
+├── WIN_copy.bat
+├── WIN_zip.bat
+```
 
 ### Plugin
 
 For more information on this, please refer to the [official documentation on qgis plugin development](https://docs.qgis.org/3.16/en/docs/pyqgis_developer_cookbook/plugins/plugins.html#writing-a-plugin)
-
-Here’s the directory structure the plugin:
-
-```
-├───icon_bars.png
-├───icon_bg_w.png
-├───icon_gis.png
-├───icon_nobg.png
-├───logo_bg_w.png
-├───logo_nobg.png
-├───logo_w-unicef.png
-├───logo_wo-unicef.png
-├───metadata.txt
-├───mgp_config_reader.py
-├───mgp_config_writer.py
-├───mgp.py
-├───mgp_mainwindow.ui
-├───mgp_main_window.py
-├───mgp_version.py
-├───resources.py
-├───resources.qrc
-├───ui_mgp_mainwindow.py
-├───WIN_build.bat
-├───__init__.py
-└───test
-```
 
 **init**.py = The starting point of the plugin. It has to have the classFactory() method and may have any other initialisation code.
 
@@ -79,12 +88,6 @@ Here’s the directory structure the plugin:
 - `WIN_build.bat`: This helper scripts do the transciprtion from ui to py file, and qrc to py.
   **It needs to be executed only when modifications have been applied to the qrc or the ui file**
 
-> The WIN_build.bat launch two commands, **pyuic5** and **pyrcc5**. They have to be installed first:
-
-```
-pip install pyqt5-tools
-```
-
 - `mgp_version.py` contains the version number of the plugin (also written in metadata.txt)
 - `mgp_config_reader.py` read a config file (basic ini file) and initialize the plugin with it
 - `mgp_config_writer.py` write a config file (basic ini file) based on the plugin interface
@@ -92,6 +95,7 @@ pip install pyqt5-tools
   This documentation can't be a complete introduction to Qt interface programmation.
   Basically, this file helps maanging user inputs, testing values, and starts the processes.
   In order to the run the processes, it triggeres the Step01Manager and CovariatesProcesser contains in the **micsgeocode folder**
+
 
 ### MICS GeoCode
 
@@ -103,5 +107,46 @@ pip install pyqt5-tools
 - `CentroidsLoader.py` The **Centroids Loading** part: init, and process
 - `CentroidsDisplacer.py` The **Centroids Displacment** part: init, and process
 - `CovariatesProcesser.py` Step02 algorithm
+- TODO: add new files
 
 The code is documented, more precise informations would be found inside the files.
+
+### Helper scripts for windows (.bat files)
+
+There are three helper scripts for windows:
+
+#### WIN_build.bat
+
+This helper scripts do the transciprtion from ui to py file, and qrc to py.
+
+**It needs to be executed only when modifications have been applied to the qrc or the ui file**
+
+> The WIN_build.bat launch two commands, **pyuic5** and **pyrcc5**. They have to be installed first:
+
+```
+pip install pyqt5-tools
+```
+
+#### WIN_copy.bat
+
+This script setup locally the qgis plugin. It copies everything at the right place in the qgis plugin directory
+`%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\micsgeocodeplugin`
+
+This is made for development phase and personal setup.
+
+> The first time the plugin is copied using WIN_copy.bat, it is loaded but not activated. This has to be don in QGIS:
+> `Plugin/Install or manage the extension` then `All` then search for `micsgeocode`
+> Finally, check the checkbox, and it's all set !
+
+#### WIN_zip.bat
+
+This script setup a zip file based on `%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\micsgeocodeplugin`.
+The zip file is named `micsgeocodeplugin.zip`, and will be located in the same folder as the WIN_zip.bat.
+This is made to share the project with others.
+For more information on this, please refer to the [official documentation on this topic](https://docs.qgis.org/3.16/fr/docs/user_manual/plugins/plugins.html#the-install-from-zip-tab)
+
+> This script is based on the very common 7zip.
+> Make sure this lib is installed before running this script.
+
+
+
