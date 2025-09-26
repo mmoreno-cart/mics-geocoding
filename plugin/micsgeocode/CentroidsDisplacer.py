@@ -95,7 +95,7 @@ class CentroidsDisplacer():
         # load centroids layer
         #self.centroidLayer = CentroidsLoader.CentroidsLoader().loadCentroidsLayer()
 
-    def displaceCentroids(self) -> typing.NoReturn:
+    def displaceCentroids(self, progress_bar) -> typing.NoReturn:
         """ Facade method that handle all the centroids displacement.
         """
         Logger.logInfo("[CentroidsDisplacer] Centroids displacement starts at {}".format(datetime.now()))
@@ -111,6 +111,8 @@ class CentroidsDisplacer():
 
         # Displace points
         #crs_transformation = None
+        total_features = self.centroidLayer.featureCount()
+        i = 0
         for cluster_centroid_ft in self.centroidLayer.getFeatures():
             #if not crs_transformation:
             # obtain the target transformation
@@ -119,6 +121,10 @@ class CentroidsDisplacer():
             #print(f"[CentroidsDisplacer] Using EPSG {crs_transformation.destEPSG}")
 
             self.__displaceCentroid(cluster_centroid_ft, crs_transformation)
+
+            i += 1
+            progress = int((i) / total_features * 100)
+            progress_bar.update(progress)
 
         self.writeLayers()
 

@@ -29,6 +29,7 @@ from .micsgeocode import CentroidBuffersLayerWriter as BufferWriter
 from .micsgeocode import CentroidsLoader as Loader
 from .micsgeocode import Utils
 from .micsgeocode.Logger import Logger
+# from .micsgeocode.ProgressBar import ProgressBar
 #from qgis.core import QgsVectorLayer, QgsProject  # QGIS3
 
 
@@ -224,6 +225,7 @@ class MGPMainWindowTab1Handler(QtCore.QObject):
 
         try:
             loader = Loader.CentroidsLoader()
+            # self.mainwindow.progress.show()
 
             loader.input_file = self.ui.centroidsSourceFileLineEdit.text()
 
@@ -235,11 +237,13 @@ class MGPMainWindowTab1Handler(QtCore.QObject):
 
             loader.loadCentroids()
 
+            # self.mainwindow.progress.hide()
             Logger.logSuccess("[Generate] Centroids succcessfully generated")
 
             self.centroidsLoaded.emit()
 
         except BaseException as e:
+            # self.mainwindow.progress.hide()
             Logger.logException("[Generate] A problem occured while generating centroids.", e)
 
     def onGenerateCentroidBuffersButtonCLicked(self) -> typing.NoReturn:

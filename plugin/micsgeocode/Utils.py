@@ -203,12 +203,9 @@ def detect_csv_delimiter(file_path, sample_lines=3):
 
     sniffer = csv.Sniffer()
     try:
-        print(f"Sample for delimiter detection:\n{sample}")
         dialect = sniffer.sniff(sample, delimiters=',;\t|')
-        print(f"Detected delimiter: '{dialect.delimiter}'")
         return dialect.delimiter
     except csv.Error:
-        print("Could not detect delimiter, defaulting to comma")
         return ','  # fallback to comma
     
 def getFieldsListAsStrArray(file: str) -> typing.List[str]:

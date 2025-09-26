@@ -28,6 +28,7 @@ from .ui_mgp_mainwindow import Ui_MGPDialog
 from .micsgeocode import CentroidsDisplacer as Displacer
 from .micsgeocode import CentroidBuffersMaxDistanceComputer as Radier
 from .micsgeocode.Logger import Logger
+from .micsgeocode.ProgressBar import ProgressBar
 from .micsgeocode import Utils
 from .mgp_file import openFile as MGP_OPEN_FILE
 from qgis.core import QgsVectorLayer, QgsProject  # QGIS3
@@ -341,6 +342,7 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
             return
 
         try:
+            self.mainwindow.progress.show()
             self.maxDistancesPerBufferId = None
 
             displacer = Displacer.CentroidsDisplacer()
@@ -375,18 +377,20 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
                     self.ui.urbanismFileLineEdit.setEnabled(False)  
                     self.ui.urbanismFileToolButton.setEnabled(False)
                     
-            displacer.displaceCentroids()
+            displacer.displaceCentroids(self.mainwindow.progress)
 
             Utils.putLayerOnTopIfExists(Utils.LayersType.CENTROIDS)
 
             Utils.reloadLayerFromDiskToAvoidMemoryFlag(Utils.LayersType.CENTROIDS)
 
+            self.mainwindow.progress.hide()
             Logger.logSuccess("[Displace] Centroids succcessfully displaced")
 
             self.maxDistancesPerBufferId = displacer.maxDistances
 
             self.centroidsDisplaced.emit()
         except BaseException as e:
+            self.mainwindow.progress.hide()
             Logger.logException("[Displace] A problem occured while displacing centroids", e)
 
     def onExportDisplacedCentroidsButtonClicked(self) -> typing.NoReturn:
