@@ -146,8 +146,8 @@ def reloadLayerFromDiskToAvoidMemoryFlag(layerType: LayersType) -> typing.NoRetu
         # try default file name
         filename = LayersName.fileName(layerType)
 
+    # print(f"Reloading layer {layerName} from disk: {filename}")
     removeLayerIfExists(layerType)
-
     layer = QgsVectorLayer(filename, layerName)
     QgsProject.instance().addMapLayer(layer)
 

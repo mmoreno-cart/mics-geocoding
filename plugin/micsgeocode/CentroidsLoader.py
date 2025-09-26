@@ -67,11 +67,12 @@ class CentroidsLoader():
             self.__loadCentroidsFromSHP()
         elif input_file_clusters_format == "csv":
             self.__loadCentroidsFromCSV()
+        
         QgsProject.instance().addMapLayer(self.layers[Utils.LayersType.CENTROIDS])
 
         self.writeLayers()
 
-        self.reloadLayerFromDiskToAvoidMemoryFlag()
+        # self.reloadLayerFromDiskToAvoidMemoryFlag()
 
         return Errors.ErrorCode.SUCCESS
 
@@ -96,17 +97,17 @@ class CentroidsLoader():
         Utils.putLayerOnTopIfExists(Utils.LayersType.CENTROIDS)
 
     def writeLayers(self) -> typing.NoReturn:
-        """ Write all the layers handle by this class to files
+        """ Write CENTROIDS layer to file
         """
         Utils.writeLayerIfExists(Utils.LayersType.CENTROIDS)
 
         Logger.logInfo("[CentroidsLoader] Layers written to disk")
 
     def reloadLayerFromDiskToAvoidMemoryFlag(self) -> typing.NoReturn:
-        """ Write all the layers handle by this class to files
+        """ Reload CENTROIDS layer handle by this class from disk to avoid memory flag
         """
         Utils.reloadLayerFromDiskToAvoidMemoryFlag(Utils.LayersType.CENTROIDS)
-        Logger.logInfo("[CentroidsLoader] Layers written to disk")
+        Logger.logInfo("[CentroidsLoader] Layers reloaded from disk")
 
 ## ###########################################################################
 # init layers
