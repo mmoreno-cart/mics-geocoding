@@ -191,7 +191,7 @@ class CentroidsLoader():
                     cluster_polygon[self.admin_boundaries_field]
                 ])
 
-                print(f"[CentroidsLoader] Computing centroid for cluster {cluster_polygon[self.cluster_no_field]}")
+                #print(f"[CentroidsLoader] Computing centroid for cluster {cluster_polygon[self.cluster_no_field]}")
 
                 cluster_centroid_ft.setGeometry(Utils.getPoleOfInaccessibilityOrCentroid(cluster_polygon, self.pole_inaccessibility_precision))
 
@@ -240,7 +240,7 @@ class CentroidsLoader():
         delimiter = Utils.detect_csv_delimiter(self.input_file)
         Logger.logInfo(f"[CentroidsLoader] Detected delimiter: '{delimiter}'")
         with open(self.input_file, "r", encoding='utf-8-sig') as f:
-
+            # line_count = sum(1 for g in f)
 
             c = 0
             # parse csv file
@@ -261,6 +261,8 @@ class CentroidsLoader():
                         'lon': float(line[lon_id]),
                         'admin': line[admin_boundaries_id]
                     })
+                # progress = int((c + 1) / line_count * 100)  
+                # self.progress_bar.update(progress)
                 c = c + 1
         return gps_coords
 
@@ -332,7 +334,7 @@ class CentroidsLoader():
             # compute centroid
             cluster_centroid_ft.setAttributes([cluster[0], cluster[1], len(gps_coords_list), gps_coords_per_cluster[0]['admin']])
             
-            print(f"[CentroidsLoader] Computing centroid for cluster {cluster[0]}")
+            #print(f"[CentroidsLoader] Computing centroid for cluster {cluster[0]}")
             
             self.__computeCentroidGeometry(cluster_centroid_ft, cluster_multipt_ft, cluster_convexhull_ft)
 

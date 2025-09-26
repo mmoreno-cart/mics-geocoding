@@ -31,15 +31,15 @@ class ProgressBar(QtCore.QObject):
 
     def update(self, progress: int):
         """Called by processing classes to update progress"""
-        print(f"UPDATE PROGRESS BAR: {progress}%")
+        # print(f"UPDATE PROGRESS BAR: {progress}%")
         self.progressChanged.emit(progress)
 
     def hide(self) -> None:
-        print("HIDE PROGRESS BAR")
+        # print("HIDE PROGRESS BAR")
         if self.widget:
             self.widget.setVisible(False)
 
     def show(self) -> None:
-        print("SHOW PROGRESS BAR")
+        # print("SHOW PROGRESS BAR")
         if self.widget:
             self.widget.setVisible(True)

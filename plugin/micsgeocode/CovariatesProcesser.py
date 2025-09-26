@@ -90,7 +90,7 @@ class CovariatesProcesser():
 # computation
 ####################################################################
 
-    def computeCovariates(self) -> typing.NoReturn:
+    def computeCovariates(self, progress_bar) -> typing.NoReturn:
         """ Facade that handle the covariates computation
         """
         # Generate output name
@@ -158,8 +158,11 @@ class CovariatesProcesser():
 
                 rowIndex = rowIndex + 1
             
+            total_rows = len(inputs)
+            i = 0
             # loop through all covariates
             for input_row in inputs:
+                i += 1
                 row_index = input_row['row_index']
                 file_name = input_row['file']
                 file_path = os.path.join(self.images_directory, file_name)
@@ -176,6 +179,7 @@ class CovariatesProcesser():
                     sum_stats.remove('variety')
                     column_names.pop(variety_index)
                     if len(sum_stats) == 0:
+                        progress_bar.update(int((i) / total_rows * 100))
                         continue
                 
                 if len(sum_stats) != len(column_names):
@@ -291,6 +295,7 @@ class CovariatesProcesser():
                     else:
                         msg_error = f"Shapefile covariate supports only 'distance_to_nearest' summary statistic, '{str(sum_stats)}' is not supported and will not be available in the output file."
                         self.output_warning = msg_error
+                        progress_bar.update(int((i) / total_rows * 100))
                         continue
                 
                 # Compute zonal stats and geotiff
@@ -322,8 +327,10 @@ class CovariatesProcesser():
                 else:
                     msg_error = f"Unknown file format '{file_format}' in row {row_index+1} of the input CSV file, it must be either 'Shapefile' or 'GeoTIFF'. The covariate will not be available in the output file."
                     self.output_warning = msg_error
+                    progress_bar.update(int((i) / total_rows * 100))
                     continue
 
+                progress_bar.update(int((i) / total_rows * 100))
 
             # iterating the columns
             selected_columns = []
