@@ -59,7 +59,7 @@ class CentroidsDisplacer():
         The existing centroids are available through a map layer.
     """
 
-    MAX_ITERATIONS = 20
+    MAX_ITERATIONS = 21
 
     def __init__(self):
         self.__generatedLayers = {}  # layer collection for centroids dispalcement
