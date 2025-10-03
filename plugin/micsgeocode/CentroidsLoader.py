@@ -247,14 +247,14 @@ class CentroidsLoader():
             # parse csv file
             for g in f:
                 if c == 0:
-                    line = re.split(delimiter, g.strip())
+                    line = re.split(re.escape(delimiter), g.strip())
                     cluster_no_id = line.index(self.cluster_no_field)
                     cluster_type_id = line.index(self.cluster_type_field)
                     lat_id = line.index(self.lat_field)
                     lon_id = line.index(self.lon_field)
                     admin_boundaries_id = line.index(self.admin_boundaries_field)
                 if c != 0:
-                    line = re.split(delimiter, g.strip())
+                    line = re.split(re.escape(delimiter), g.strip())
                     gps_coords.append({
                         'cluster': int(line[cluster_no_id]),
                         'type': line[cluster_type_id],

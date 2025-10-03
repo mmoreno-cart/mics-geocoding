@@ -138,14 +138,15 @@ class CovariatesProcesser():
             inputs = []
             for i in f:
                 if rowIndex == 0:
-                    line = [s.strip() for s in re.split(delimiter, i.strip())]
+
+                    line = [s.strip() for s in re.split(re.escape(delimiter), i.strip())] # error here
                     input_file_id = line.index(self.input_csv_field_filename)
                     input_fileformat_id = line.index(self.input_csv_field_fileformat)
                     input_field_sumstat_id = line.index(self.input_csv_field_sumstat)
                     input_field_columnname_id = line.index(self.input_csv_field_columnname)
                     input_field_nodata_id = line.index(self.input_csv_field_nodata) if self.input_csv_field_nodata else None
                 if rowIndex != 0:
-                    line = [s.strip() for s in re.split(delimiter, i.strip())]
+                    line = [s.strip() for s in re.split(re.escape(delimiter), i.strip())]
 
                     inputs.append({
                         'row_index': rowIndex,
@@ -159,7 +160,7 @@ class CovariatesProcesser():
                 rowIndex = rowIndex + 1
             
             total_rows = len(inputs)
-            i = 0
+            i = 0 # used only for progress bar
             # loop through all covariates
             for input_row in inputs:
                 i += 1
