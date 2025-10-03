@@ -136,10 +136,12 @@ class CovariatesProcesser():
             # read all input covariates
             rowIndex = 0
             inputs = []
+            expected_columns = None
             for i in f:
                 if rowIndex == 0:
 
                     line = [s.strip() for s in re.split(re.escape(delimiter), i.strip())] # error here
+                    expected_columns = len(line)
                     input_file_id = line.index(self.input_csv_field_filename)
                     input_fileformat_id = line.index(self.input_csv_field_fileformat)
                     input_field_sumstat_id = line.index(self.input_csv_field_sumstat)
@@ -147,6 +149,9 @@ class CovariatesProcesser():
                     input_field_nodata_id = line.index(self.input_csv_field_nodata) if self.input_csv_field_nodata else None
                 if rowIndex != 0:
                     line = [s.strip() for s in re.split(re.escape(delimiter), i.strip())]
+                    # Pad with empty strings if needed
+                    if len(line) < expected_columns:
+                        line += [''] * (expected_columns - len(line))
 
                     inputs.append({
                         'row_index': rowIndex,
