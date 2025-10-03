@@ -104,7 +104,7 @@ class CentroidBuffersLayerWriter():
         Utils.putLayerOnTopIfExists(Utils.LayersType.LINKS)  # fix z order
         Utils.putLayerOnTopIfExists(Utils.LayersType.CENTROIDS)  # fix z order
 
-        Utils.reloadLayerFromDiskToAvoidMemoryFlag(Utils.LayersType.CENTROIDS_BUFFERS)
+        # Utils.reloadLayerFromDiskToAvoidMemoryFlag(Utils.LayersType.CENTROIDS_BUFFERS)
 
         Logger.logInfo("[CentroidBuffersLayerWriter] Centroids displacement finished at {}".format(datetime.now()))
 
