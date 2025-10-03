@@ -7,6 +7,8 @@
 ##
 # Description: Handles urbanism raster validation for centroid displacement
 ##
+# IMPORTANT: DEGURBA restriction is currently under review and not part of any release. It should not be considered as any official feature.
+##
 ## ###########################################################################
 import typing
 from qgis.core import QgsGeometry, QgsRasterLayer, QgsPointXY, QgsProject, QgsCoordinateReferenceSystem, QgsCoordinateTransform

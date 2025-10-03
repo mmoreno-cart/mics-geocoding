@@ -52,6 +52,12 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
         # --> Used for generating buffer around original buffer
         self.maxDistancesPerBufferId = None
 
+        ## Hide DEGURBA for the current release # TODO: remove when DEGURBA is ready for release
+        self.ui.urbanismCheckBox.setVisible(False)
+        self.ui.urbanismFileLineEdit.setVisible(False)
+        self.ui.urbanismFileToolButton.setVisible(False)
+        self.ui.urbanismInfoToolButton.setVisible(False)
+
         ## ####################################################################
         # Init Icons
         ## ####################################################################
@@ -368,10 +374,11 @@ class MGPMainWindowTab2Handler(QtCore.QObject):
 
             # Set urbanism restriction if enabled  
             if self.ui.urbanismCheckBox.isChecked():
+                # TODO: should not enter here as DEGURBA is not part of the current release
                 if self.ui.urbanismFileLineEdit.text():  
                     displacer.setUrbanismRestriction(self.ui.urbanismFileLineEdit.text())
                 else:
-                    Logger.logWarning("[Displace] Urbanism restriction is enabled but no valid raster file has been provided. Ignoring urbanism restriction.")
+                    # Logger.logWarning("[Displace] Urbanism restriction is enabled but no valid raster file has been provided. Ignoring urbanism restriction.")
                     self.ui.urbanismCheckBox.setChecked(False)  
                     self.ui.urbanismFileLineEdit.clear()  
                     self.ui.urbanismFileLineEdit.setEnabled(False)  
