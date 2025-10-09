@@ -15,6 +15,7 @@ from PyQt5 import QtCore
 
 from pathlib import Path
 import csv  
+import re
 #from io import StringIO  
 
 import typing
@@ -203,7 +204,7 @@ def detect_csv_delimiter(file_path, sample_lines=3):
 
     sniffer = csv.Sniffer()
     try:
-        dialect = sniffer.sniff(sample, delimiters=',;\t|')
+        dialect = sniffer.sniff(sample, delimiters=',;\t\|')
         return dialect.delimiter
     except csv.Error:
         return ','  # fallback to comma
@@ -220,7 +221,7 @@ def getFieldsListAsStrArray(file: str) -> typing.List[str]:
     elif extension in ["csv", 'tsv', 'txt']:
         delimiter = detect_csv_delimiter(file)
         with open(file, "r") as f:
-            fieldList = [s.strip() for s in f.readline().strip().split(delimiter)]
+            fieldList = [s.strip() for s in re.split(re.escape(delimiter), f.readline().strip())] 
     # elif extension == "txt":
     #     with open(file, "r") as f:
     #         line = f.readline()
