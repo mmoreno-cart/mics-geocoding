@@ -120,10 +120,10 @@ For more information on this, please refer to the [official documentation on qgi
 - `Transforms.py`: Helper class that handles UTM transformation.
 - `UrbanismValidator.py`: Class that validates displacement constraints based on urbanisation degree raster classification.
 - `Utils.py`: This class manages some generic qgis layer processes, such as names, create/remove, write.
-- `CentroidsLoader.py`: The **Centroids Loading** part: init, and process
-- `CentroidsDisplacer.py`: The **Centroids Displacment** part: init, and process
-- `CovariatesProcesser.py`: Algorithm for the covariate **Extraction** part
-- TODO: add new files
+- `CentroidsLoader.py`: The **Centroids Loading** part: init, and process.
+- `CentroidsDisplacer.py`: The **Centroids Displacment** part: init, and process.
+- `CovariatesProcesser.py`: Algorithm for the covariate **Extraction** part.
+- `ProgressBar.py`: Manager for progress bar.
 
 The code is documented, more precise informations would be found inside the files.
 
