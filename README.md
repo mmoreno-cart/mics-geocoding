@@ -1,43 +1,82 @@
-# MICS Geocode
+# MICS Geocode Plugin
 
-This document is aimed at describing the project and helping developer at onboarding.
+A QGIS plugin designed to support the Multiple Indicator Cluster Survey (MICS) geospatial data anonymisation and extraction of geospatial covariates.
+Although designed for MICS, the Plugin can be used for any household survey.
 
-This document is **NOT** a comitment to anything. It is **NOT** an official technical specifications.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![QGIS: 3.0+](https://img.shields.io/badge/QGIS-3.0+-green.svg)](https://qgis.org)
 
-Author: Jan Burdziej, Unicef; Support in dev: CartONG
+---
 
-> In this project, MGP is used as an acornym for MICS Geocode Plugin
+## Quick Links
 
-- [release notes](release-notes.md)
+- 📖 **[User Guide](USER_GUIDE.md)** - Usage instructions
+- 🔧 **[Developer Documentation](#developer-documentation)** - Technical implementation details
+- 📝 **[Release Notes](release-notes.md)** - Version history and changes
+- 🐛 **[Report Issues](https://github.com/unicef/mics-geocoding/issues)** - Bug reports and feature requests
 
-## MICS Geocoding QGIS Plugin
+---
 
-This repository contains the MICS Geocoding Plugin for QGIS, developed for UNICEF. The plugin provides tools for spatial analysis and covariate extraction for MICS.
+## What is This Plugin?
 
-### Features
+The MICS Geocode Plugin streamlines the processing of GIS data for MICS surveys. Following documented methodolgy (https://mics.unicef.org/publications/mics-methodological-paper-no-12-2024-geographic-displacement-procedures-and AND https://mics.unicef.org/publications/mics-methodological-paper-no-13-2025-geospatial-covariates-extraction-procedures), it automates three key tasks:
 
-- Load and process cluster centroids from CSV files
-- Displace centroids based on urbanisation and other criteria
-- Compute zonal statistics and extract covariates
-- Export processed data for further analysis
+1. **📍 Centroid Generation** - Generate cluster centroids from GPS coordinates in shapefiles or CSV files
+2. **🔒 Privacy Protection** - Apply random displacement to ensure respondent anonymity
+3. **🌍 Covariate Extraction** - Extract geospatial covariates from raster and vector datasets for further analysis
 
-## Development environment
+### Key Features
 
-### User interface
+- **Flexible Input**: Accepts CSV (with lat/lon) or shapefile formats
+- **Automated Processing**: Streamlined workflow with minimal manual intervention
+- **Respondent Protection**: Built-in displacement algorithms for data anonymisation
+- **Covariate Processing**: Extract data from multiple raster and vector layers
+- **Configuration Management**: Save and reload project settings
+- **QGIS Integration**: Seamless integration with QGIS processing framework
 
-User interface (`mgp_mainwindow.ui` file) is designed in Qt Designer. Run [`WIN_build.bat`](#win_buildbat) to generate the Python file (`ui_mgp_mainwindow.py`).
+---
 
-### Using VS Code
+## Quick Start
 
-Followed the solution in https://aneto.pt/posts/tutorials/2024-05-11-create-easy-pyqgis-developement-environment-using-conda-and-vscode/.
+### For Users
 
-> \\!/ Important note: The batch file used to compile UI files (from .ui to .py), `WIN_build.bat`, contains dependencies not working with the latest Python versions (as of June 2025). When installing a conda environment for QGIS, use Python version `3.9.22`.
+For more detailed instructions on how to install and use the plugin, go to the MICS website (https://mics.unicef.org/mics-gis#learning_corner):
+1. Download the latest version of the plugin
+2. Download the manual on how to install the plugin
+3. Download the manual on how to use the plugin
 
-```
-conda create -n qgis_dev_p39 qgis python=3.9.22 -c conda-forge
-```
+The MICS tools are available in the UN languages and can be accessed at https://mics.unicef.org/tools#survey-design
 
-Being `qgis_dev_p39` the name of the environment (includes the python version to better identify it).
+### For Developers
+
+If you want to **develop** or **modify** the plugin, see the [Developer Documentation](#developer-documentation) below.
+
+---
+
+## System Requirements
+
+- **QGIS**: Version 3.0+
+- **Python**: 3.6+ (bundled with QGIS)
+- **Operating System**: Windows, macOS, or Linux
+- **Dependencies**: All required packages included with QGIS
+
+---
+
+## Documentation
+
+### User Documentation
+
+- **[Complete User Guide](USER_GUIDE.md)**
+
+### Developer Documentation
+
+The information below is for developers who want to modify or contribute to the plugin.
+
+**Authors**: Nazim Gashi (UNICEF), Jan Burdziej (UNICEF), Etienne Delclaux (CartONG), Miguel Moreno (CartONG)
+
+> **Note**: MGP is used throughout the codebase as an acronym for MICS Geocode Plugin
+
+---
 
 ## Project structure description
 
@@ -84,6 +123,24 @@ Being `qgis_dev_p39` the name of the environment (includes the python version to
 ├── WIN_copy.bat
 ├── WIN_zip.bat
 ```
+
+## Development environment
+
+### User interface
+
+User interface (`mgp_mainwindow.ui` file) is designed in Qt Designer. Run [`WIN_build.bat`](#win_buildbat) to generate the Python file (`ui_mgp_mainwindow.py`).
+
+### Using VS Code
+
+Followed the solution in https://aneto.pt/posts/tutorials/2024-05-11-create-easy-pyqgis-developement-environment-using-conda-and-vscode/.
+
+> \\!/ Important note: The batch file used to compile UI files (from .ui to .py), `WIN_build.bat`, contains dependencies not working with the latest Python versions (as of June 2025). When installing a conda environment for QGIS, use Python version `3.9.22`.
+
+```
+conda create -n qgis_dev_p39 qgis python=3.9.22 -c conda-forge
+```
+
+Being `qgis_dev_p39` the name of the environment (includes the python version to better identify it).
 
 ### Plugin
 

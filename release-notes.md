@@ -27,17 +27,17 @@
 - Add the Admin drop-down list to the “Displace” tab.
 - Move the “Generate Centroid Buffers” button from “Displace” to “Generate,”.
 - Reposition the “Generate Centroids” button.
-
+ 
 ### Bugfixes
-
+ 
 - Rename outputs correctly when using original buffers.
 - Correct the file dialog label for the cluster source input.
 - Prevent unintended use of previous basenames.
-- Stop saving temporary “distance to nearest shp” layers. 
-
+- Stop saving temporary “distance to nearest shp” layers.
+ 
 ## Previous to 1.3.0
-
-Notes not available for intermediate releases
+ 
+Notes are not available at the moment for intermediate releases.
 
 ## 0.9
 
