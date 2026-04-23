@@ -146,7 +146,7 @@ Being `qgis_dev_p39` the name of the environment (includes the python version to
 
 For more information on this, please refer to the [official documentation on qgis plugin development](https://docs.qgis.org/3.16/en/docs/pyqgis_developer_cookbook/plugins/plugins.html#writing-a-plugin).
 
-- **init.py**: The starting point of the plugin. It has to have the classFactory() method and may have any other initialisation code.
+- **`init.py`**: The starting point of the plugin. It has to have the classFactory() method and may have any other initialisation code.
 - `png files`: options for the logo and the icons used in the plugin.
 - `metadata.txt`: Contains general info, version, name and some other metadata used by plugins website and plugin infrastructure.
 - `resources.qrc`: The .xml document created by Qt Designer. Contains relative paths to resources of the forms.
