@@ -222,8 +222,8 @@ class CovariatesProcesser():
 
                             #if not crs_transformation:
                             # obtain the target transformation
-                            startPoint = startGeom.asPoint() # QgsPointXY
-                            crs_transformation = Transforms(startPoint.y(), startPoint.x())
+                            pt = startGeom.asPoint() # QgsPointXY
+                            crs_transformation = Transforms(pt.y(), pt.x())
 
                             minDistFtId = -1
 
@@ -243,7 +243,8 @@ class CovariatesProcesser():
                                 isInsideFeature = False
                                 for tmp_ft in search_features:
                                     geom = tmp_ft.geometry()
-                                    contains = geom.contains(startPoint)
+                                    pt = cluster_ft.geometry().centroid().asPoint() # TODO: startGeom.asPoint() ?
+                                    contains = geom.contains(pt)
                                     if contains:
                                         minDistFtId = tmp_ft.id()
                                         isInsideFeature = True
@@ -252,18 +253,19 @@ class CovariatesProcesser():
                                 if not isInsideFeature:
                                     cswc = min(
                                         [(
-                                            l.id(), l.geometry().closestSegmentWithContext(startPoint)
+                                            l.id(), l.geometry().closestSegmentWithContext(cluster_ft.geometry().centroid().asPoint()) # TODO: startGeom.asPoint() ?
                                         ) for l in search_features],
                                         key=itemgetter(1)
                                     )
                                     minDistPoint = cswc[1][1]  # nearest point on line
                                     minDistFtId = cswc[0]  # line id of nearest point
+                                    # endPt = QgsPoint(minDistPoint[0], minDistPoint[1])
                                     endGeom = QgsGeometry.fromPointXY(QgsPointXY(minDistPoint[0], minDistPoint[1]))
                                 else:
                                     endGeom = startGeom
 
                             line = QgsGeometry.fromPolyline([
-                                QgsPoint(startPoint),
+                                QgsPoint(startGeom.asPoint()),
                                 QgsPoint(endGeom.asPoint())
                             ])
                             # creating line between point and nearest point
