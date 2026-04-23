@@ -195,6 +195,7 @@ class CentroidsLoader():
                 #print(f"[CentroidsLoader] Computing centroid for cluster {cluster_polygon[self.cluster_no_field]}")
 
                 cluster_centroid_ft.setGeometry(Utils.getPoleOfInaccessibilityOrCentroid(cluster_polygon, self.pole_inaccessibility_precision))
+
                 self.layers[Utils.LayersType.CENTROIDS].dataProvider().addFeatures([cluster_centroid_ft])
                 # cluster_centroid_fts.append(cluster_centroid_ft)
             QgsProject.instance().addMapLayer(self.layers[Utils.LayersType.POLYGONS])

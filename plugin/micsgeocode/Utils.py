@@ -271,13 +271,15 @@ def layerCrossesTheMeridian(layer: QgsVectorLayer) -> bool:
         return False
 
 def getPoleOfInaccessibilityOrCentroid(polygon_feature: QgsFeature, fallback_feature: QgsFeature = None, precision: float = 0.00001) -> typing.NoReturn:
-    """ Compute the pole of inaccessibility for a polygon feature, falling back to centroid if unavailable.
+    """ Compute the centroid geometry for a given centroid feature, the multi point and the convexhull
     """
+
     pole_result = polygon_feature.geometry().poleOfInaccessibility(precision)
-    if pole_result[0].isNull():
-        if fallback_feature:
-            return fallback_feature.geometry().centroid()
+    if pole_result[0].isNull(): 
+        if fallback_feature:  
+            return fallback_feature.geometry().centroid()  # fallback to centroid
         else:
-            return polygon_feature.geometry().centroid()
-    else:
+            return polygon_feature.geometry().centroid()  # fallback to centroid  
+    else:  
         return pole_result[0]
+
